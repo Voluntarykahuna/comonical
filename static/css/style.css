@@ -1,4 +1,4 @@
-/* Color Palette & Reset */
+
 :root {
     --primary-navy: #2c3e50;
     --accent-green: #27ae60;
@@ -15,7 +15,7 @@ body {
     margin: 0;
 }
 
-/* Navigation */
+
 nav {
     background: var(--primary-navy);
     padding: 1rem 5%;
@@ -46,7 +46,7 @@ nav {
 
 .nav-links a:hover { color: var(--accent-blue); }
 
-/* Stats Dashboard */
+
 .stats-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -61,7 +61,7 @@ nav {
     text-align: center;
 }
 
-/* Item Grid & Cards */
+
 .item-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -86,7 +86,7 @@ nav {
 
 .item-info { padding: 15px; }
 
-/* Forms (Login, Signup, Report) */
+
 .form-container {
     background: var(--white);
     max-width: 500px;
@@ -118,7 +118,7 @@ button {
 
 button:hover { opacity: 0.9; }
 
-/* Table Styles (My Reports) */
+
 table {
     width: 100%;
     border-collapse: collapse;

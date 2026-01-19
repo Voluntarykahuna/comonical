@@ -14,16 +14,15 @@ class SignUpView(CreateView):
     fields = [] 
 
     def post(self, request, *args, **kwargs):
-        # 1. Extract all data including the re-added user_id
         data = request.POST
         username = data.get('username')
         email = data.get('email')
-        user_id = data.get('user_id')  # Added this back
+        user_id = data.get('user_id')  
         phone = data.get('phone_number')
         password = data.get('password')
         password_confirm = data.get('password_confirm')
 
-        # 2. Manual Validation logic
+        
         if password != password_confirm:
             messages.error(request, "Passwords do not match!")
             return render(request, self.template_name)
@@ -36,9 +35,8 @@ class SignUpView(CreateView):
             messages.error(request, "This Student/Staff ID is already registered.")
             return render(request, self.template_name)
 
-        # 3. Create user and login
+        
         try:
-            # Passing user_id to satisfy the database constraint
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
@@ -50,7 +48,6 @@ class SignUpView(CreateView):
             messages.success(request, f"Welcome, {username}! Registration successful.")
             return redirect('item_list')
         except Exception as e:
-            # This will catch things like 'IntegrityError' if ID isn't unique
             messages.error(request, f"Database Error: {e}")
             return render(request, self.template_name)
 
@@ -62,7 +59,6 @@ class UserLogoutView(LogoutView):
 
 @login_required
 def profile_view(request):
-    # This ensures the profile page shows the logged-in user's data
     my_items = Item.objects.filter(founder=request.user).order_by('-date_found')
     return render(request, 'registration/profile.html', {
         'my_items': my_items,

@@ -5,7 +5,7 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        # Adding our custom fields to the signup form
+        
         fields = UserCreationForm.Meta.fields + ('user_id', 'phone_number', 'email')
 
 class CustomUserChangeForm(UserChangeForm):

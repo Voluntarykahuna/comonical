@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Item
 
-# 1. Home Page - Public List
+
 class ItemListView(ListView):
     model = Item
     template_name = 'app/item_list.html'
@@ -25,17 +25,17 @@ class ItemListView(ListView):
         context['total_recovered'] = Item.objects.filter(is_recovered=True).count()
         return context
 
-# 2. Detail Page
+
 class ItemDetailView(LoginRequiredMixin, DetailView):
     model = Item
     template_name = 'app/item_detail.html'
 
-# 3. Report Page (Create)
+
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Item
     template_name = 'app/item_form.html'
     fields = ['title', 'description', 'category', 'image', 'location_found', 'date_found']
-    success_url = reverse_lazy('my_reports') # Takes user to their dashboard after posting
+    success_url = reverse_lazy('my_reports') 
 
     def form_valid(self, form):
         form.instance.founder = self.request.user
@@ -47,7 +47,7 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         messages.error(self.request, "Could not post item. Please check the fields.")
         return super().form_invalid(form)
 
-# 4. User Dashboard (My Reports)
+
 class MyReportsListView(LoginRequiredMixin, ListView):
     model = Item
     template_name = 'app/my_reports.html'
@@ -56,7 +56,7 @@ class MyReportsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Item.objects.filter(founder=self.request.user).order_by('-date_found')
 
-# 5. Quick Logic: Mark as Recovered
+
 @login_required
 def mark_as_recovered(request, pk):
     item = get_object_or_404(Item, pk=pk)
@@ -66,7 +66,7 @@ def mark_as_recovered(request, pk):
         messages.success(request, f"Item '{item.title}' marked as recovered!")
     return redirect('my_reports')
 
-# 6. Edit Item View
+
 class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Item
     template_name = 'app/item_form.html'
@@ -74,7 +74,6 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('my_reports')
 
     def test_func(self):
-        # Only allow the founder to edit
         item = self.get_object()
         return self.request.user == item.founder
 
@@ -86,14 +85,13 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         print("UPDATE FORM INVALID:", form.errors)
         return super().form_invalid(form)
 
-# 7. Delete Item View
+
 class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Item
     template_name = 'app/item_confirm_delete.html'
     success_url = reverse_lazy('my_reports')
 
     def test_func(self):
-        # Only allow the founder to delete
         item = self.get_object()
         return self.request.user == item.founder
     
