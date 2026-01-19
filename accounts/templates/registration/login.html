@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container" style="max-width: 400px; margin: 50px auto; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center;">Login</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn-submit" style="width: 100%; padding: 10px; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer;">
+            Enter Portal
+        </button>
+    </form>
+    
+    <p style="text-align: center; margin-top: 15px;">
+        New student? <a href="{% url 'signup' %}">Create an account</a>
+    </p>
+</div>
+{% endblock %}

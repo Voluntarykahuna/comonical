@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container" style="max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    
+    {% if form.errors %}
+    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+        <p><strong>Please fix the following errors:</strong></p>
+        <ul style="margin: 0;">
+            {% for field, errors in form.errors.items %}
+                <li>{{ field|title }}: {{ errors|striptags }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <h2 style="color: #2c3e50; margin-top: 0;">
+        {% if object %} Edit Report: {{ object.title }} {% else %} Report a Found Item {% endif %}
+    </h2>
+    <p style="color: #666; margin-bottom: 25px;">
+        {% if object %} Update the details below to fix any mistakes. {% else %} Please provide accurate details to help the owner identify their property. {% endif %}
+    </p>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Item Title:</label>
+            <input type="text" name="title" value="{% if object %}{{ object.title }}{% else %}{{ request.POST.title }}{% endif %}" required placeholder="e.g. Blue Hydroflask" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Description:</label>
+            <textarea name="description" rows="3" required placeholder="Mention specific marks..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">{% if object %}{{ object.description }}{% else %}{{ request.POST.description }}{% endif %}</textarea>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Category:</label>
+            <select name="category" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                <option value="electronics" {% if object.category == 'electronics' or request.POST.category == 'electronics' %}selected{% endif %}>Electronics</option>
+                <option value="documents" {% if object.category == 'documents' or request.POST.category == 'documents' %}selected{% endif %}>Documents/IDs</option>
+                <option value="personal" {% if object.category == 'personal' or request.POST.category == 'personal' %}selected{% endif %}>Personal Items</option>
+                <option value="other" {% if object.category == 'other' or request.POST.category == 'other' %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Upload Image:</label>
+            {% if object.image %}
+                <p style="font-size: 0.8em; color: #666;">Current: <a href="{{ object.image.url }}" target="_blank">View existing image</a></p>
+            {% endif %}
+            <input type="file" name="image" accept="image/*" {% if not object %}required{% endif %} style="width: 100%; padding: 10px; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 6px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Location Found:</label>
+            <input type="text" name="location_found" value="{% if object %}{{ object.location_found }}{% else %}{{ request.POST.location_found }}{% endif %}" required placeholder="e.g. Science Lab 302" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Date Found:</label>
+            <input type="date" name="date_found" value="{% if object %}{{ object.date_found|date:'Y-m-d' }}{% else %}{{ request.POST.date_found }}{% endif %}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+        </div>
+        
+        <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px;">
+            <button type="submit" style="background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1;">
+                {% if object %} Update Report {% else %} Post Item {% endif %}
+            </button>
+            <a href="{% url 'my_reports' %}" style="text-decoration: none; color: #888; font-size: 0.9em;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

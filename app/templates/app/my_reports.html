@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="margin-top: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div>
+            <h2 style="margin: 0; color: var(--primary-navy);">My Reported Items</h2>
+            <p style="color: #666; margin-top: 5px;">Manage the items you have found on campus.</p>
+        </div>
+        <a href="{% url 'item_report' %}" style="background: var(--accent-blue); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9em; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);">
+            + Report New Item
+        </a>
+    </div>
+
+    {% if user_items %}
+    <div style="background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: var(--primary-navy); color: white; text-align: left;">
+                    <th style="padding: 15px;">Preview</th>
+                    <th style="padding: 15px;">Item Details</th>
+                    <th style="padding: 15px;">Date Found</th>
+                    <th style="padding: 15px;">Status</th>
+                    <th style="padding: 15px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in user_items %}
+                <tr style="border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#fcfcfc'" onmouseout="this.style.background='white'">
+                    <td style="padding: 15px;">
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;">
+                    </td>
+                    
+                    <td style="padding: 15px;">
+                        <a href="{% url 'item_detail' item.pk %}" style="color: var(--accent-blue); font-weight: bold; text-decoration: none;">
+                            {{ item.title }}
+                        </a>
+                        <br>
+                        <small style="color: #888;">ID: #{{ item.id }}</small>
+                    </td>
+                    
+                    <td style="padding: 15px; color: #555;">{{ item.date_found }}</td>
+                    
+                    <td style="padding: 15px;">
+                        {% if item.is_recovered %}
+                            <span style="background: #e8f5e9; color: var(--accent-green); padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; border: 1px solid #c8e6c9;">
+                                ✔ Recovered
+                            </span>
+                        {% else %}
+                            <span style="background: #fff3e0; color: #f39c12; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; border: 1px solid #ffe0b2;">
+                                ● Active
+                            </span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            {% if not item.is_recovered %}
+                                <form action="{% url 'mark_recovered' item.pk %}" method="post" style="display:inline; margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background: var(--accent-green); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: bold;">
+                                        Mark Found
+                                    </button>
+                                </form>
+
+                                <a href="{% url 'item_edit' item.pk %}" style="color: #f39c12; text-decoration: none; font-size: 1.2em;" title="Edit Report">✏️</a>
+                            {% endif %}
+                            
+                            <a href="{% url 'item_delete' item.pk %}" style="color: #e74c3c; text-decoration: none; font-size: 1.2em;" title="Delete Report">🗑️</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div style="font-size: 3rem; margin-bottom: 20px;">📂</div>
+            <h3 style="color: var(--primary-navy);">You haven't reported any items yet</h3>
+            <p style="color: #777; margin-bottom: 25px;">Be a hero! If you find something on campus, report it here to help it find its owner.</p>
+            <a href="{% url 'item_report' %}" style="background: var(--accent-blue); color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+                Report My First Item
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

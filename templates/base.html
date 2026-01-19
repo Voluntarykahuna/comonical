@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    
+    {% include 'navbar.html' %}
+
+    <main class="container">
+        {% if messages %}
+            <style>
+                .messages { margin-top: 20px; }
+                .alert {
+                    padding: 15px;
+                    margin-bottom: 20px;
+                    border-radius: 8px;
+                    font-weight: 500;
+                }
+                /* Green for success */
+                .alert-success {
+                    background-color: #d4edda;
+                    color: #155724;
+                    border: 1px solid #c3e6cb;
+                }
+                /* Red for errors/info */
+                .alert-error, .alert-danger {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                    border: 1px solid #f5c6cb;
+                }
+            </style>
+
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer style="text-align: center; padding: 40px 0; color: #888; border-top: 1px solid #eee; margin-top: 40px;">
+        <p>&copy; 2026 Lost and Found System | Promoting Honesty</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<nav>
+    <div class="logo">
+        <a href="{% url 'item_list' %}">
+            <strong>L&F</strong>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{% url 'item_list' %}">Home</a></li>
+        
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'item_report' %}">Report Found Item</a></li>
+            <li><a href="{% url 'my_reports' %}">My Reports</a></li>
+            
+            <li class="user-menu">
+                <span class="welcome-text">Hi, <strong>{{ user.username }}</strong></span>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}" class="signup-btn">Sign Up</a></li>
+        {% endif %}
+    </ul>
+</nav>
